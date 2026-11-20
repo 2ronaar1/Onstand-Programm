@@ -1,0 +1,45 @@
+{
+  "name": "onstand",
+  "productName": "Onstand",
+  "version": "1.0.0",
+  "description": "Onstand – Baustelle und Büro an einem Ort",
+  "author": "Onstand",
+  "homepage": "https://onstand.de",
+  "main": "main.js",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "bauen": "electron-builder --win --publish never"
+  },
+  "devDependencies": {
+    "electron": "33.2.1",
+    "electron-builder": "25.1.8"
+  },
+  "build": {
+    "appId": "de.onstand.app",
+    "productName": "Onstand",
+    "copyright": "© 2026 Onstand",
+    "directories": { "output": "dist", "buildResources": "build" },
+    "files": ["main.js", "offline.html", "icon.png"],
+    "win": {
+      "target": [{ "target": "nsis", "arch": ["x64"] }],
+      "icon": "build/icon.ico",
+      "artifactName": "Onstand-Setup.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": false,
+      "createDesktopShortcut": "always",
+      "createStartMenuShortcut": true,
+      "shortcutName": "Onstand",
+      "uninstallDisplayName": "Onstand",
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
+      "installerLanguages": ["de_DE"],
+      "language": "1031",
+      "runAfterFinish": true,
+      "deleteAppDataOnUninstall": false
+    }
+  }
+}
