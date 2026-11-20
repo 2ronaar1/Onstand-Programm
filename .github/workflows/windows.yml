@@ -1,0 +1,42 @@
+# Baut das Windows-Programm (Onstand-Setup.exe) auf einem Windows-Rechner von GitHub
+# und legt es als Release ab. Start: Reiter „Actions“ → „Onstand Windows bauen“ → „Run workflow“.
+# Die Version kommt aus package.json („version“). Für eine neue Programmversion dort hochzählen.
+name: Onstand Windows bauen
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  bauen:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Pakete laden
+        run: npm install --no-audit --no-fund
+
+      - name: Programm bauen
+        run: npm run bauen
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: false
+
+      - name: Version lesen
+        id: v
+        shell: bash
+        run: echo "nr=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - name: Als Release veröffentlichen
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.v.outputs.nr }}
+          name: Onstand ${{ steps.v.outputs.nr }}
+          body: Windows-Programm von Onstand. Herunterladen, öffnen, installieren.
+          files: dist/Onstand-Setup.exe
+          make_latest: true
